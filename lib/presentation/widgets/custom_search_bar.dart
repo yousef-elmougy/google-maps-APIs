@@ -6,10 +6,11 @@ class CustomSearchBar extends StatelessWidget {
       {super.key,
       required this.controller,
       required this.onQueryChanged,
-      required this.builder});
+      required this.builder, required this.onFocusChanged});
 
   final FloatingSearchBarController controller;
   final OnQueryChangedCallback onQueryChanged;
+  final OnFocusChangedCallback onFocusChanged;
   final FloatingSearchBarBuilder builder;
 
   @override
@@ -18,6 +19,7 @@ class CustomSearchBar extends StatelessWidget {
         MediaQuery.of(context).orientation == Orientation.portrait;
     return FloatingSearchBar(
       automaticallyImplyBackButton: false,
+      margins: const EdgeInsets.only(top: 30 , left: 10 ,right: 10),
       controller: controller,
       clearQueryOnClose: true,
       hint: 'search...',
@@ -38,7 +40,7 @@ class CustomSearchBar extends StatelessWidget {
       // progress: model.isLoading,
       debounceDelay: const Duration(milliseconds: 500),
       onQueryChanged: onQueryChanged,
-      onFocusChanged: (_) {},
+      onFocusChanged:onFocusChanged,
       scrollPadding: EdgeInsets.zero,
       transition: CircularFloatingSearchBarTransition(spacing: 16),
       builder: builder,

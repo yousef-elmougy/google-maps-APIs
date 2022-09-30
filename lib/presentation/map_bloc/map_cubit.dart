@@ -77,6 +77,7 @@ class MapCubit extends Cubit<MapState> {
             placeDetailsModel = value;
             getPlaceDetailsLocation(title: title);
             floatingSearchController.close();
+            getDirections();
             emit(PlaceDetailsLoaded());
           }));
 
@@ -136,15 +137,28 @@ class MapCubit extends Cubit<MapState> {
 
   DirectionsModel? directionsModel;
 
-  Future<void> getDirections({LatLng? origin, LatLng? destination}) async =>
-      await repository
-          .getDirections(origin: origin, destination: destination)
-          .then((value) => value.fold(
-                  (failure) => emit(DirectionsError(mapFailureToMsg(failure))),
-                  (value) {
-                directionsModel = value;
-                emit(DirectionsLoaded());
-              }));
+  Future<void> getDirections() async => await repository
+      .getDirections(
+          origin: initialCameraPosition.target,
+          destination: placeDetailsCameraPosition.target)
+      .then((value) => value.fold(
+              (failure) => emit(DirectionsError(mapFailureToMsg(failure))),
+              (value) {
+            directionsModel = value;
+            emit(DirectionsLoaded());
+          }));
+
+  List<LatLng> get polylinePoints => directionsModel!.polylinePoints
+      .map((e) => LatLng(e.latitude, e.longitude))
+      .toList();
+
+  /// DistanceAndTimeVisibility
+
+  bool isVisible =true;
+  void distanceAndTimeVisibility(){
+    isVisible = !isVisible;
+    emit(DistanceAndTimeVisibility());
+  }
 }
 
 String mapFailureToMsg(Failure failure) {

@@ -39,3 +39,6 @@ class DirectionsLoaded extends MapState {}
 // ADD MARKER
 
 class AddMarker extends MapState {}
+
+
+class DistanceAndTimeVisibility extends MapState {}
